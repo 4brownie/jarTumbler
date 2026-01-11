@@ -1,3 +1,51 @@
+/**
+ * @file JarTumbler.ino
+ * @brief Automated Jar Tumbler for Homemade Vanilla Extract Agitation
+ *
+ * @details
+ * This Arduino program controls a motorized jar tumbler designed to periodically agitate
+ * a 1/2 gallon mason jar containing homemade vanilla extract (vanilla beans + vodka).
+ *
+ * The system runs the motor in short bursts at configurable intervals to improve extraction
+ * speed and flavor consistency without requiring daily manual shaking.
+ *
+ * Features:
+ *   - 16x2 LCD display showing batch status, total run time, and mixing information
+ *   - Automatic mode: periodic mixing cycles (default: every 1 hour for ~2 minutes)
+ *   - Manual mode: continuous motor operation for testing/setup
+ *   - Safety interlock using two switches (control + manual override)
+ *   - Revolution counter with optional positional correction
+ *   - Cycle-through LCD screens (status + time, time since last mix, mix settings)
+ *
+ * Hardware Connections:
+ *   - LCD: RS=12, EN=11, D4=5, D5=4, D6=3, D7=2
+ *   - Manual override switch: Pin 7 (INPUT_PULLUP, LOW = ON)
+ *   - Relay (motor control): Pin 8 (HIGH = motor ON)
+ *   - Mode control switch: Pin 9 (INPUT_PULLUP, LOW = Auto mode)
+ *
+ * Operation Modes:
+ *   - Stopped: Both switches OFF → motor off, timers reset
+ *   - Manual: Control OFF, Manual ON → motor continuously ON
+ *   - Running: Control ON, Manual OFF → passive timer counting
+ *   - Mixing: Periodic short motor run during Running mode
+ *
+ * Configuration Constants:
+ *   - mixSetTime       : Hours between mixing cycles (default: 1)
+ *   - revolutionCorrection : Number of rotations before correction timing (default: 1)
+ *   - lcdRefreshInterval : LCD update frequency (3000 ms)
+ *
+ * @note
+ *   - Uses millis()-based timing (no RTC → drifts over long periods)
+ *   - Motor timing is approximate; add hall sensor for precise revolution counting
+ *   - Alcohol is flammable → use proper relay, low voltage, and keep away from sparks
+ *
+ * @author Jason Brown / 4brownie
+ * @date Started January 2025
+ * @version 1.0
+ * @copyright MIT License
+ * @see https://github.com/4brownie/jarTumbler
+ */
+
 #include <LiquidCrystal.h>
 #include <stdio.h>
 #include <Arduino.h>
